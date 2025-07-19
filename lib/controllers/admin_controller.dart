@@ -5,7 +5,7 @@ class AdminController {
   final AdminService _adminService;
 
   AdminController(this._adminService);
-
+ 
   Future<bool> login(String username, String password) async {
     try {
       final encryptedUsername = Encryption.encryptText(username);

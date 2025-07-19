@@ -7,7 +7,7 @@ enum ScreenType {
   registerUser,
   sendWarningAlert,
   notifications,
-  settings
+  settings,
 }
 
 class NavigationController with ChangeNotifier {

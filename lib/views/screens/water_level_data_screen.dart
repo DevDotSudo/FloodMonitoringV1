@@ -1,62 +1,78 @@
 import 'package:flood_monitoring/constants/app_colors.dart';
-import 'package:flood_monitoring/controllers/dashboard_controller.dart';
+import 'package:flood_monitoring/controllers/water_level_data_controller.dart';
+import 'package:flood_monitoring/models/water_level_data.dart';
 import 'package:flood_monitoring/views/widgets/card.dart';
 import 'package:flood_monitoring/views/widgets/water_level_graph.dart';
 import 'package:flutter/material.dart';
 
-class WaterLevelDataScreen extends StatelessWidget {
-  final _waterLevelController = DashboardController();
+class WaterLevelDataScreen extends StatefulWidget {
+  const WaterLevelDataScreen({super.key});
 
-  WaterLevelDataScreen({super.key});
+  @override
+  State<WaterLevelDataScreen> createState() => _WaterLevelDataScreenState();
+}
+
+class _WaterLevelDataScreenState extends State<WaterLevelDataScreen> {
+  final WaterLevelDataController _waterLevelController =
+      WaterLevelDataController();
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Detailed Water Level Data',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textDark,
-                  ),
+    return StreamBuilder<List<WaterLevelDataPoint>>(
+      stream: _waterLevelController.watchWaterLevels(),
+      builder: (context, snapshot) {
+        final data = snapshot.data ?? [];
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Detailed Water Level Data',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      height: 600,
+                      child: snapshot.connectionState == ConnectionState.waiting
+                          ? const Center(child: CircularProgressIndicator())
+                          : data.isNotEmpty
+                          ? WaterLevelGraph(dataPoints: data)
+                          : const Center(child: Text('No data available')),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Recent Readings',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildDataTable(data),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: 600,
-                  child: _waterLevelController.liveWaterLevelData.isNotEmpty
-                      ? WaterLevelGraph(
-                          dataPoints: _waterLevelController.liveWaterLevelData,
-                        )
-                      : const Center(child: Text('No data available')),
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Recent Readings',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildDataTable(),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildDataTable() {
+  Widget _buildDataTable(List<WaterLevelDataPoint> data) {
+    final recent = data.take(5).toList();
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -66,28 +82,7 @@ class WaterLevelDataScreen extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: DataTable(
-          border: TableBorder(
-            top: BorderSide(
-              width: 1,
-              color: AppColors.textGrey
-            ),
-            left: BorderSide(
-              width: 1,
-              color: AppColors.textGrey
-            ),
-            bottom: BorderSide(
-              width: 1,
-              color: AppColors.textGrey
-            ),
-            right: BorderSide(
-              width: 1,
-              color: AppColors.textGrey
-            ),
-            verticalInside: BorderSide(
-              width: 1,
-              color: AppColors.textGrey
-            )
-          ),
+          border: TableBorder.all(color: AppColors.textGrey),
           columnSpacing: 24,
           horizontalMargin: 16,
           dataRowMinHeight: 54,
@@ -128,19 +123,15 @@ class WaterLevelDataScreen extends StatelessWidget {
               ),
             ),
           ],
-          rows: List<DataRow>.generate(
-            5,
-            (index) => DataRow(
+          rows: recent.map((point) {
+            return DataRow(
               cells: [
                 DataCell(
-                  Text(
-                    ['16:45', '16:15', '15:45', '15:15', '14:45'][index],
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  Text(point.time, style: const TextStyle(fontSize: 16)),
                 ),
                 DataCell(
                   Text(
-                    ['1.5', '1.6', '1.7', '1.8', '1.9'][index],
+                    point.level.toString(),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
@@ -151,22 +142,26 @@ class WaterLevelDataScreen extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.statusNormalBg,
+                      color: point.status == 'Warning'
+                          ? Colors.orange.shade100
+                          : AppColors.statusNormalBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Normal',
+                    child: Text(
+                      point.status,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.statusNormalText,
+                        color: point.status == 'Warning'
+                            ? Colors.orange
+                            : AppColors.statusNormalText,
                       ),
                     ),
                   ),
                 ),
               ],
-            ),
-          ),
+            );
+          }).toList(),
         ),
       ),
     );

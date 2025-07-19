@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '257292082474',
     projectId: 'capstone-flood-monitoring',
     storageBucket: 'capstone-flood-monitoring.firebasestorage.app',
-    androidClientId: '257292082474-up43dasbl4tf9p6g8fhbdh0m726dg1b6.apps.googleusercontent.com',
-    iosClientId: '257292082474-rhlg704qkdh5la2oqo8khiuviop2e3iv.apps.googleusercontent.com',
+    androidClientId:
+        '257292082474-up43dasbl4tf9p6g8fhbdh0m726dg1b6.apps.googleusercontent.com',
+    iosClientId:
+        '257292082474-rhlg704qkdh5la2oqo8khiuviop2e3iv.apps.googleusercontent.com',
     iosBundleId: 'com.capstone.floodMonitoring',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '257292082474',
     projectId: 'capstone-flood-monitoring',
     storageBucket: 'capstone-flood-monitoring.firebasestorage.app',
-    androidClientId: '257292082474-up43dasbl4tf9p6g8fhbdh0m726dg1b6.apps.googleusercontent.com',
-    iosClientId: '257292082474-rhlg704qkdh5la2oqo8khiuviop2e3iv.apps.googleusercontent.com',
+    androidClientId:
+        '257292082474-up43dasbl4tf9p6g8fhbdh0m726dg1b6.apps.googleusercontent.com',
+    iosClientId:
+        '257292082474-rhlg704qkdh5la2oqo8khiuviop2e3iv.apps.googleusercontent.com',
     iosBundleId: 'com.capstone.floodMonitoring',
   );
 

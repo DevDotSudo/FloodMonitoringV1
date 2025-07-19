@@ -28,10 +28,8 @@ class CustomCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderRadius ?? BorderRadius.circular(12),
-        border: border ?? Border.all(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
+        border:
+            border ?? Border.all(color: Colors.grey.withOpacity(0.1), width: 1),
         boxShadow: boxShadow ?? _defaultShadow(),
       ),
       child: child,

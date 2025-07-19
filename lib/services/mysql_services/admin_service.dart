@@ -22,7 +22,10 @@ class AdminService {
     final admin = await _adminDAO.getAdminByUsername(username);
     if (admin == null) return false;
 
-    final isValidPassword = HashPassword().validPassword(password, admin.password);
+    final isValidPassword = HashPassword().validPassword(
+      password,
+      admin.password,
+    );
     return isValidPassword;
   }
 

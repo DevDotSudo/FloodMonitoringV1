@@ -53,7 +53,7 @@ class SubscriberController with ChangeNotifier {
       addSubscriberFromFirestoreListener();
     });
   }
-  
+
   Future<void> addSubscriber(Subscriber newSubscriber) async {
     await _subscriberService.addSubscriber(newSubscriber);
     notifyListeners();

@@ -77,7 +77,8 @@ class CustomTextField extends StatelessWidget {
         hintStyle: hintStyle ?? TextStyle(color: Colors.grey.shade500),
         filled: true,
         fillColor: fillColor ?? Colors.white,
-        contentPadding: contentPadding ??
+        contentPadding:
+            contentPadding ??
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
@@ -99,10 +100,7 @@ class CustomTextField extends StatelessWidget {
   InputBorder _buildFocusedBorder(BuildContext context) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide(
-        color: Theme.of(context).primaryColor,
-        width: 1.5,
-      ),
+      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
     );
   }
 }

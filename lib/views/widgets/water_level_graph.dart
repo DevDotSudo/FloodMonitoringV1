@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class WaterLevelGraph extends StatelessWidget {
-  List<WaterLevelDataPoint> dataPoints = [];
+  final List<WaterLevelDataPoint> dataPoints;
 
-  WaterLevelGraph({super.key, required this.dataPoints});
+  const WaterLevelGraph({super.key, required this.dataPoints});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,12 @@ class WaterLevelGraph extends StatelessWidget {
     }
 
     final maxY = data.map((e) => e.level).reduce((a, b) => a > b ? a : b) * 1.2;
-    final status = WaterLevelDataPoint.getWaterStatus();
+
+    // Convert to map list for status check
+    final status = WaterLevelDataPoint.getWaterStatusFromList(
+      data.map((e) => e.toMap()).toList(),
+    );
+
     final lineColor = status == "Normal"
         ? AppColors.normalStatus
         : status == "Warning"
@@ -74,18 +79,6 @@ class WaterLevelGraph extends StatelessWidget {
               final index = value.toInt();
               if (index < 0 || index >= data.length) {
                 return const SizedBox.shrink();
-              }
-              if (data.length <= 8) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    data[index].time,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.textGrey,
-                    ),
-                  ),
-                );
               }
               return Padding(
                 padding: const EdgeInsets.only(top: 8),
@@ -143,20 +136,17 @@ class WaterLevelGraph extends StatelessWidget {
     );
   }
 
-  // Helper method to calculate appropriate interval for bottom titles (time)
   double _calculateBottomInterval(int dataLength) {
-    // For small datasets (like your 8 data points), show all labels
     if (dataLength <= 8) return 1;
     if (dataLength <= 12) return 2;
     if (dataLength <= 24) return 3;
-    return (dataLength / 6).ceil().toDouble();
+    return (dataLength / 6).ceilToDouble();
   }
 
-  // Helper method to calculate appropriate interval for left titles (meters)
   double _calculateLeftInterval(double maxY) {
     if (maxY <= 5) return 1;
     if (maxY <= 10) return 2;
     if (maxY <= 20) return 5;
-    return (maxY / 5).ceil().toDouble();
+    return (maxY / 5).ceilToDouble();
   }
 }

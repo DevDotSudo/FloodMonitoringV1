@@ -51,11 +51,12 @@ class CustomButton extends StatelessWidget {
             padding: padding,
             elevation: elevation,
             minimumSize: Size(width ?? double.infinity, height!),
-            textStyle: textStyle ??
+            textStyle:
+                textStyle ??
                 const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           )
         : ElevatedButton.styleFrom(
-            backgroundColor: onPressed == null || isLoading 
+            backgroundColor: onPressed == null || isLoading
                 ? color.withOpacity(0.5)
                 : color,
             foregroundColor: textColor,
@@ -66,7 +67,8 @@ class CustomButton extends StatelessWidget {
             elevation: elevation,
             shadowColor: color.withOpacity(0.3),
             minimumSize: Size(width ?? double.infinity, height!),
-            textStyle: textStyle ??
+            textStyle:
+                textStyle ??
                 const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           );
 

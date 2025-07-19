@@ -50,6 +50,8 @@ dependencies:
   pointycastle: ^3.9.1
   mysql_client: ^0.0.27
   cloud_firestore: ^5.6.11
+  flutter_local_notifications: ^19.3.1
+  audioplayers: ^6.5.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +79,9 @@ flutter:
   assets:
     - assets/images/app_icon_desktop.png
     - assets/images/desktop_background.png
+    - assets/sounds/critical_sound.mp3
+    - assets/sounds/warning_sound.mp3
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

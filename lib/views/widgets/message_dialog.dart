@@ -45,7 +45,9 @@ class MessageDialog extends StatelessWidget {
             Container(
               height: 4,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 color: theme.primaryColor,
               ),
             ),
@@ -70,10 +72,7 @@ class MessageDialog extends StatelessWidget {
                   Text(
                     message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 15,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
                   ),
                   const SizedBox(height: 24),
                   CustomButton(

@@ -170,12 +170,8 @@ class _SubscribersScreenState extends State<SubscribersScreen> {
                 (states) => Colors.grey.shade100,
               ),
               columns: const [
-                DataColumn(
-                  label: Text('Name', style: TextStyle(fontSize: 18))
-                ),
-                DataColumn(
-                  label: Text('Age', style: TextStyle(fontSize: 18))
-                ),
+                DataColumn(label: Text('Name', style: TextStyle(fontSize: 18))),
+                DataColumn(label: Text('Age', style: TextStyle(fontSize: 18))),
                 DataColumn(
                   label: Text('Gender', style: TextStyle(fontSize: 18)),
                 ),

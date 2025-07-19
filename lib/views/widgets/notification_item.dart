@@ -85,14 +85,14 @@ class NotificationItem extends StatelessWidget {
           Icons.check_circle_rounded,
           Colors.green.shade500,
           AppColors.statusNormalBg,
-          AppColors.statusNormalText
+          AppColors.statusNormalText,
         );
       case 'Failed':
         return (
           Icons.error_outline_rounded,
           Colors.red.shade500,
           AppColors.statusAlertBg,
-          AppColors.statusAlertText
+          AppColors.statusAlertText,
         );
       case 'Info':
       default:
@@ -100,7 +100,7 @@ class NotificationItem extends StatelessWidget {
           Icons.info_outline_rounded,
           Colors.blue.shade500,
           AppColors.statusInfoBg,
-          AppColors.statusInfoText
+          AppColors.statusInfoText,
         );
     }
   }
@@ -110,10 +110,7 @@ class NotificationItem extends StatelessWidget {
       children: [
         Text(
           'Status:',
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
         ),
         const SizedBox(width: 8),
         Container(
@@ -134,10 +131,7 @@ class NotificationItem extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           DateFormat('MMM d, y · h:mm a').format(notification.timestamp),
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.grey.shade600,
-          ),
+          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
         ),
       ],
     );

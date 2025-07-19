@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-// For simulating API call response with LLM
 import 'dart:convert';
 import 'package:http/http.dart'
-    as http; // Make sure to add http dependency in pubspec.yaml
+    as http; 
 
 class SendWarningController with ChangeNotifier {
   String _alertStatusMessage = '';

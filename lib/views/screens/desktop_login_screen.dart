@@ -120,7 +120,7 @@ class _DesktopLoginScreenState extends State<DesktopLoginScreen> {
       body: Stack(
         children: [
           Opacity(
-            opacity: 0.8, 
+            opacity: 0.8,
             child: Image.asset(
               'assets/images/desktop_background.png',
               fit: BoxFit.cover,

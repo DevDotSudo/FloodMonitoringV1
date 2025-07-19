@@ -6,6 +6,15 @@ class SqlSubscribersDAO {
     final conn = await MySQLService.getConnection();
 
     try {
+      final result = await conn.execute(
+        'SELECT id FROM subscribers WHERE id = :id',
+        {'id': subscriberData.id},
+      );
+
+      if (result.rows.isNotEmpty) {
+        return; 
+      }
+
       await conn.execute(
         'INSERT INTO subscribers (id, fullName, age, gender, phoneNumber, address, registeredDate, viaSMS) '
         'VALUES (:id, :fullName, :age, :gender, :phoneNumber, :address, :registeredDate, :viaSMS)',
