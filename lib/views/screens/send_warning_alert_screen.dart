@@ -82,7 +82,7 @@ class _SendWarningAlertScreenState extends State<SendWarningAlertScreen> {
                     ),
                     const SizedBox(height: 8.0),
                     DropdownButtonFormField<String>(
-                      value: 'all-subscribers',
+                      value: 'app-subscribers',
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -97,17 +97,25 @@ class _SendWarningAlertScreenState extends State<SendWarningAlertScreen> {
                       ),
                       items: const [
                         DropdownMenuItem(
-                          value: 'all-subscribers',
+                          value: 'app-subscribers',
                           child: Text(
-                            'All Subscribers',
+                            'App Subscribers',
+                            style: TextStyle(color: AppColors.textDark),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: 'sms-only',
+                          child: Text(
+                            'SMS only',
                             style: TextStyle(color: AppColors.textDark),
                           ),
                         ),
                       ],
                       onChanged: (value) {
-                        // This dropdown is effectively static with one option
+                        // Handle selection change
                       },
                     ),
+
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

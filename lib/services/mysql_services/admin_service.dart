@@ -1,4 +1,4 @@
-import 'package:flood_monitoring/dao/mysql_dao/admin_dao.dart';
+import 'package:flood_monitoring/dao/mysql/admin_dao.dart';
 import 'package:flood_monitoring/models/admin_registration.dart';
 import 'package:flood_monitoring/utils/encrypt_util.dart';
 import 'package:flood_monitoring/utils/hash_util.dart';

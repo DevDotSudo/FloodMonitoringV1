@@ -1,5 +1,6 @@
-import 'package:flood_monitoring/dao/mysql_dao/sql_subscribers_dao.dart';
+import 'package:flood_monitoring/dao/mysql/sql_subscribers_dao.dart';
 import 'package:flood_monitoring/models/subscriber.dart';
+import 'package:flood_monitoring/services/firestore_services/subscriber_service_firestore.dart';
 import 'package:flood_monitoring/utils/encrypt_util.dart';
 
 class SqlSubscriberService {
@@ -36,6 +37,7 @@ class SqlSubscriberService {
 
   Future<void> deleteSubscriber(String id) async {
     await _subscribersDao.deleteSubscriber(id);
+    await SubscriberService().deleteSubscriber(id);
   }
 
   Future<int> countSubscribers() async {

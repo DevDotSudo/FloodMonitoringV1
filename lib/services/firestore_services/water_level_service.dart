@@ -10,7 +10,7 @@ class WaterLevelService {
   String? _lastStatus;
 
   Stream<List<WaterLevelDataPoint>> watchWaterLevels() {
-    return _waterLevelsRef.orderBy('time', descending: true).snapshots().map((
+    return _waterLevelsRef.orderBy('time', descending: false).snapshots().map((
       snapshot,
     ) {
       return snapshot.docs.map((doc) {

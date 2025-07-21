@@ -6,7 +6,6 @@ import 'package:flood_monitoring/shared_pref.dart';
 import 'package:flood_monitoring/views/widgets/card.dart';
 import 'package:flood_monitoring/views/widgets/water_level_graph.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flood_monitoring/services/alert_service/audio_alert_service.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -31,14 +30,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     _loadSubscribersCount();
     _loadAdminName();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Provider.of<SubscriberController>(
-        context,
-        listen: false,
-      ).startListenerAfterBuild();
-      if (mounted) setState(() {});
-    });
   }
 
   Future<void> _loadSubscribersCount() async {
@@ -195,7 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 22,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textGrey,
                 ),

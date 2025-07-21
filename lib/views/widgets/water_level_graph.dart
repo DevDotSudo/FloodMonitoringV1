@@ -15,6 +15,7 @@ class WaterLevelGraph extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade200),
+        color: Colors.grey.shade50, 
       ),
       child: LineChart(_buildChartData(dataPoints)),
     );
@@ -31,7 +32,6 @@ class WaterLevelGraph extends StatelessWidget {
 
     final maxY = data.map((e) => e.level).reduce((a, b) => a > b ? a : b) * 1.2;
 
-    // Convert to map list for status check
     final status = WaterLevelDataPoint.getWaterStatusFromList(
       data.map((e) => e.toMap()).toList(),
     );
@@ -39,8 +39,8 @@ class WaterLevelGraph extends StatelessWidget {
     final lineColor = status == "Normal"
         ? AppColors.normalStatus
         : status == "Warning"
-        ? AppColors.warningStatus
-        : AppColors.criticalStatus;
+            ? AppColors.warningStatus
+            : AppColors.criticalStatus;
 
     return LineChartData(
       lineTouchData: LineTouchData(
@@ -57,6 +57,9 @@ class WaterLevelGraph extends StatelessWidget {
               ],
             );
           }).toList(),
+          getTooltipColor: (spot) => lineColor.withOpacity(0.8), 
+          tooltipBorderRadius: BorderRadius.circular(8),
+          tooltipPadding: const EdgeInsets.all(8),
         ),
       ),
       gridData: FlGridData(
@@ -71,6 +74,15 @@ class WaterLevelGraph extends StatelessWidget {
         ),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         bottomTitles: AxisTitles(
+          axisNameWidget: const Text(
+            'Time (hour)',
+            style: TextStyle(
+              color: Color.fromARGB(255, 54, 66, 90),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          axisNameSize: 24,
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
@@ -94,6 +106,15 @@ class WaterLevelGraph extends StatelessWidget {
           ),
         ),
         leftTitles: AxisTitles(
+          axisNameWidget: const Text(
+            'Water Level (meter)',
+            style: TextStyle(
+              color: AppColors.textGrey,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          axisNameSize: 24,
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
@@ -148,5 +169,5 @@ class WaterLevelGraph extends StatelessWidget {
     if (maxY <= 10) return 2;
     if (maxY <= 20) return 5;
     return (maxY / 5).ceilToDouble();
-  }
+  } 
 }

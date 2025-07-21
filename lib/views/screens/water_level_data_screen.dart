@@ -154,6 +154,8 @@ class _WaterLevelDataScreenState extends State<WaterLevelDataScreen> {
                         fontWeight: FontWeight.w500,
                         color: point.status == 'Warning'
                             ? Colors.orange
+                            : point.status == 'Critical'
+                            ? Colors.red
                             : AppColors.statusNormalText,
                       ),
                     ),

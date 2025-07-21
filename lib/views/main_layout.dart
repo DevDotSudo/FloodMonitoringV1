@@ -4,6 +4,7 @@ import 'package:flood_monitoring/views/screens/dashboard_screen.dart';
 import 'package:flood_monitoring/views/screens/notification_screen.dart';
 import 'package:flood_monitoring/views/screens/register_user_screen.dart';
 import 'package:flood_monitoring/views/screens/send_warning_alert_screen.dart';
+import 'package:flood_monitoring/views/screens/settings_screen.dart';
 import 'package:flood_monitoring/views/screens/subscriber_screen.dart';
 import 'package:flood_monitoring/views/screens/water_level_data_screen.dart';
 import 'package:flood_monitoring/views/widgets/sidebar.dart';
@@ -98,7 +99,7 @@ class MainLayout extends StatelessWidget {
       case ScreenType.notifications:
         return const NotificationsScreen();
       case ScreenType.settings:
-        return const NotificationsScreen();
+        return const SettingsScreen();
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:flood_monitoring/controllers/navigation_controller.dart';
 import 'package:flood_monitoring/controllers/send_warning_controller.dart';
 import 'package:flood_monitoring/controllers/subscriber_controller.dart';
 import 'package:flood_monitoring/controllers/water_level_data_controller.dart';
-import 'package:flood_monitoring/dao/mysql_dao/mysql_connection.dart';
+import 'package:flood_monitoring/dao/mysql/mysql_connection.dart';
 import 'package:flood_monitoring/firebase_options.dart';
 import 'package:flood_monitoring/services/alert_service/notification_alert_service.dart';
 import 'package:flood_monitoring/services/firestore_services/water_level_service.dart';
