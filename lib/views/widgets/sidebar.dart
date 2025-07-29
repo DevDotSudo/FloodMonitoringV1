@@ -13,7 +13,7 @@ class Sidebar extends StatelessWidget {
     final navigationController = Provider.of<NavigationController>(context);
 
     return Container(
-      width: 240,
+      width: 300,
       color: AppColors.primaryBackground,
       padding: const EdgeInsets.symmetric(vertical: 24),
       child: Column(
@@ -141,7 +141,7 @@ class Sidebar extends StatelessWidget {
                 label,
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.white70,
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                 ),
               ),

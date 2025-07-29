@@ -5,6 +5,7 @@ import 'package:flood_monitoring/models/water_level_data.dart';
 import 'package:flood_monitoring/shared_pref.dart';
 import 'package:flood_monitoring/views/widgets/card.dart';
 import 'package:flood_monitoring/views/widgets/water_level_graph.dart';
+import 'package:flood_monitoring/views/widgets/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:flood_monitoring/services/alert_service/audio_alert_service.dart';
 
@@ -51,157 +52,219 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<WaterLevelDataPoint>>(
-      stream: _waterLevelController.watchWaterLevels(),
-      builder: (context, snapshot) {
-        final data = snapshot.data ?? [];
-        final currentLevel = data.isNotEmpty ? data.last.level : 0.0;
-        final status = data.isNotEmpty ? data.last.status : 'No readings.';
+    return Scaffold(
+      body: StreamBuilder<List<WaterLevelDataPoint>>(
+        stream: _waterLevelController.watchWaterLevels(),
+        builder: (context, snapshot) {
+          final data = snapshot.data ?? [];
+          final currentLevel = data.isNotEmpty ? data.last.level : 0.0;
+          final status = data.isNotEmpty ? data.last.status : 'No readings.';
 
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(18.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_loadingName)
-                      const SizedBox(height: 40)
-                    else
-                      Text(
-                        _adminName == null || _adminName!.isEmpty
-                            ? 'Welcome Admin'
-                            : 'Welcome, $_adminName',
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_loadingName)
+                        const SizedBox(height: 40)
+                      else
+                        Text(
+                          _adminName == null || _adminName!.isEmpty
+                              ? 'Welcome Admin'
+                              : 'Welcome, $_adminName',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Dashboard Overview',
+                        style: TextStyle(
+                          fontSize: 24,
                           color: AppColors.textDark,
                         ),
                       ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Dashboard Overview',
-                      style: TextStyle(fontSize: 24, color: AppColors.textDark),
-                    ),
-                    const SizedBox(height: 20),
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        final crossAxisCount = 3;
-                        return GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: crossAxisCount,
-                          crossAxisSpacing: 22,
-                          childAspectRatio: crossAxisCount == 3 ? 3 : 4,
-                          children: [
-                            _buildMetricCard(
-                              icon: Icons.group_outlined,
-                              iconColor: Colors.blue.shade600,
-                              bgColor: Colors.blue.shade50,
-                              label: 'Total Subscribers',
-                              value: totalSubscribers?.toString() ?? '0',
-                            ),
-                            _buildMetricCard(
-                              icon: Icons.water_drop_outlined,
-                              iconColor: Colors.teal.shade600,
-                              bgColor: Colors.teal.shade50,
-                              label: 'Current Water Level',
-                              value: '${currentLevel.toStringAsFixed(2)}m',
-                            ),
-                            _buildMetricCard(
-                              icon: Icons.warning_amber_outlined,
-                              iconColor: _getStatusColor(status),
-                              bgColor: _getStatusColor(status).withOpacity(0.1),
-                              label: 'River Status',
-                              value: status,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              CustomCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Water Level Monitoring',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textDark,
+                      const SizedBox(height: 20),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final crossAxisCount = 3;
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 36,
+                            childAspectRatio: crossAxisCount == 3 ? 3 : 4,
+                            children: [
+                              _buildSubscribersCard(totalSubscribers ?? 0),
+                              _buildWaterLevelCard(
+                                currentLevel.toStringAsFixed(2),
+                              ),
+                              _buildRiverStatusCard(status),
+                            ],
+                          );
+                        },
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 600,
-                      child: snapshot.connectionState == ConnectionState.waiting
-                          ? const Center(child: CircularProgressIndicator())
-                          : data.isNotEmpty
-                          ? WaterLevelGraph(dataPoints: data)
-                          : const Center(child: Text('No data available')),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+                const SizedBox(height: 24),
+                // Combined CustomCard for Water Level Monitoring and Weather
+                CustomCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Row for titles: "Water Level Monitoring" and "Today's Weather"
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Water Level Monitoring',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 24), // Space between titles
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Today's Weather",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.textDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ), // Space between titles and content below
+                      // Row for content: WaterLevelGraph and WeatherCard
+                      Row(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start, // Align items at the top
+                        children: [
+                          Expanded(
+                            flex: 4,
+                            child: SizedBox(
+                              height: 600, // Fixed height for the graph
+                              child:
+                                  snapshot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? const Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : data.isNotEmpty
+                                  ? WaterLevelGraph(dataPoints: data)
+                                  : const Center(
+                                      child: Text('No data available'),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 24,
+                          ), // Space between the graph and weather card
+                          Expanded(
+                            child: SizedBox(
+                              height: 550,
+                              width: double.infinity,
+                              child: WeatherCard(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildMetricCard({
     required IconData icon,
     required Color iconColor,
-    required Color bgColor,
     required String label,
     required String value,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: iconColor, size: 45),
-              ),
-              const SizedBox(width: 18),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textGrey,
-                ),
-              ),
-            ],
+        color: iconColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border(
+          left: BorderSide(color: iconColor, width: 4.5),
+          top: BorderSide(color: iconColor, width: 1),
+          bottom: BorderSide(color: iconColor, width: 1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-                color: iconColor,
-              ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 75,
+            height: 75,
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: iconColor, size: 45),
+          ),
+          const SizedBox(width: 34),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF64748B),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: iconColor,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -210,11 +273,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Color _getStatusColor(String status) {
-    if (status.isEmpty || status.contains('No readings.')) return Colors.blue;
+    if (status.isEmpty || status.contains('No readings.')) {
+      return const Color(0xFF3B82F6); // Blue
+    }
     return status == "Normal"
-        ? Colors.green
+        ? const Color(0xFF059669) // Green
         : status == "Warning"
-        ? Colors.orange
-        : Colors.red;
+        ? const Color(0xFFF59E0B) // Orange
+        : const Color(0xFFDC2626); // Red
+  }
+
+  Widget _buildSubscribersCard(int subscriberCount) {
+    return _buildMetricCard(
+      icon: Icons.people,
+      iconColor: const Color(0xFF3B82F6),
+      label: 'Total Subscribers',
+      value: subscriberCount.toString(),
+    );
+  }
+
+  Widget _buildWaterLevelCard(String waterLevel) {
+    return _buildMetricCard(
+      icon: Icons.water_drop,
+      iconColor: const Color(0xFF059669),
+      label: 'Current Water Level',
+      value: waterLevel,
+    );
+  }
+
+  Widget _buildRiverStatusCard(String status) {
+    return _buildMetricCard(
+      icon: Icons.warning,
+      iconColor: _getStatusColor(status),
+      label: 'River Status',
+      value: status,
+    );
   }
 }

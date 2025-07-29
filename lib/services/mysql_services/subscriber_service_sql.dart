@@ -61,4 +61,23 @@ class SqlSubscriberService {
         )
         .toList();
   }
+
+  Future<String> getPhoneNumbers() async {
+    try {
+      List<String> encryptedNumbers = await _subscribersDao.fetchPhoneNumbers();
+
+      List<String> decryptedNumbers = encryptedNumbers.map((e) {
+        String decrypted = Encryption.decryptText(e);
+        if (decrypted.startsWith('0')) {
+          decrypted = '63${decrypted.substring(1)}';
+        }
+        return decrypted;
+      }).toList();
+
+      return decryptedNumbers.join(',');
+    } catch (e) {
+      print("Error: $e");
+      return '';
+    }
+  }
 }

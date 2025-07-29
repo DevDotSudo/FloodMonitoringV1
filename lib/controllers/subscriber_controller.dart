@@ -66,4 +66,8 @@ class SubscriberController with ChangeNotifier {
   Future<void> deleteSubscriber(String id) async {
     await _subscriberService.deleteSubscriber(id);
   }
+
+  Future<String> phoneNumbers() async {
+    return await _subscriberService.getPhoneNumbers();
+  }
 }

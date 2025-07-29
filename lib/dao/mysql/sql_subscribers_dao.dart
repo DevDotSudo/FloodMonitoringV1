@@ -12,7 +12,7 @@ class SqlSubscribersDAO {
       );
 
       if (result.rows.isNotEmpty) {
-        return; 
+        return;
       }
 
       await conn.execute(
@@ -52,7 +52,7 @@ class SqlSubscribersDAO {
           'phoneNumber': subscriberData.phone,
           'address': subscriberData.address,
           'registeredDate': subscriberData.registeredDate,
-          'viaSMS': 1,
+          'viaSMS': 'Yes',
         },
       );
     } catch (e) {
@@ -112,5 +112,18 @@ class SqlSubscribersDAO {
     } finally {
       await conn.close();
     }
+  }
+
+  Future<List<String>> fetchPhoneNumbers() async {
+    final conn = await MySQLService.getConnection();
+    final results = await conn.execute(
+      "SELECT phoneNumber FROM subscribers WHERE viaSMS = 'Yes';",
+    );
+    List<String> numbers = [];
+    for (final row in results.rows) {
+      numbers.add(row.colByName("phoneNumber")!);
+    }
+    await conn.close();
+    return numbers;
   }
 }
