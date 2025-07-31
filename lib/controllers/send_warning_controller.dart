@@ -1,3 +1,4 @@
+import 'package:flood_monitoring/services/warning_service/app_notification_service.dart';
 import 'package:flood_monitoring/services/warning_service/send_sms_service.dart';
 import 'package:flutter/material.dart';
 
@@ -33,5 +34,16 @@ class SendWarningController with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void appNotification(String message) async {
+    await AppNotificationService().sendToAllUsers(
+      title: 'Flood Warning Alert',
+      body: message,
+      data: {
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'screen': 'updates',
+      },
+    );
   }
 }

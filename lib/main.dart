@@ -27,10 +27,9 @@ void main() async {
   runApp(const FloodMonitoring());
 
   doWhenWindowReady(() {
-    const fullSize = Size(1920, 1080);
-    appWindow.minSize = fullSize;
-    appWindow.maxSize = fullSize;
-    appWindow.size = fullSize;
+    const minSize = Size(1920, 1080);
+    appWindow.minSize = minSize;   
+    appWindow.size = minSize;       
     appWindow.alignment = Alignment.center;
     appWindow.show();
   });

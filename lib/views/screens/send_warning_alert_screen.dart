@@ -167,13 +167,31 @@ class _SendWarningAlertScreenState extends State<SendWarningAlertScreen> {
                         ? () {}
                         : () async {
                             String message = _messageController.text.trim();
-                            String recipients = await _subscriberController
-                                .phoneNumbers();
-                            _sendWarningController.sendWarningAlert(
-                              message:
-                                  'Banate MDRRMO (${DateFormat('MM/dd/yyyy hh:mm a').format(DateTime.now())}): $message',
-                              recipient: recipients,
-                            );
+                            if (_notifyOnApp) {
+                              print('On App');
+                              _sendWarningController.appNotification(message);
+                            } else if (_sendSms) {
+                              print('On SMS');
+                              String recipients = await _subscriberController
+                                  .phoneNumbers();
+                              _sendWarningController.sendWarningAlert(
+                                message:
+                                    'Banate MDRRMO (${DateFormat('MM/dd/yyyy hh:mm a').format(DateTime.now())}): $message',
+                                recipient: recipients,
+                              );
+                            } else if (_sendSms & _notifyOnApp) {
+                              print(_sendSms & _notifyOnApp);
+                              _sendWarningController.appNotification(message);
+                              String recipients = await _subscriberController
+                                  .phoneNumbers();
+                              _sendWarningController.sendWarningAlert(
+                                message:
+                                    'Banate MDRRMO (${DateFormat('MM/dd/yyyy hh:mm a').format(DateTime.now())}): $message',
+                                recipient: recipients,
+                              );
+                            } else {
+                              print("No selected value");
+                            }
                           },
                     color: Colors.red.shade600,
                     textColor: Colors.white,

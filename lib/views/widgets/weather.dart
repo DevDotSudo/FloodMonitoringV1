@@ -39,8 +39,8 @@ class _WeatherCardState extends State<WeatherCard> {
 
     try {
       final data = await _weatherService.fetchWeatherData(
-        latitude: 11.1713335,
-        longitude: 123.0199077,
+        latitude: 11.000592,
+        longitude: 122.8155554,
       );
       setState(() => _weatherData = data);
     } catch (e) {
