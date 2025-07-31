@@ -1,17 +1,35 @@
-# flood_monitoring
+🌊 Flood Monitoring System
+A system designed to monitor weather and flood conditions in real-time, providing alerts and data visualization for disaster preparedness.
 
-A new Flutter project.
+📌 Features
+🌦 Weather Tracking – Displays live weather data using OpenWeather API.
 
-## Getting Started
+🚨 Flood Alerts – Sends notifications when flood risk is detected.
 
-This project is a starting point for a Flutter application.
+📱 Multi-Platform Support – Works on mobile and desktop.
 
-A few resources to get you started if this is your first Flutter project:
+🔗 Firebase Integration – Stores and syncs data in real-time.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+🛠️ Tech Stack
+Frontend: Flutter
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# FloodMonitoringV1" 
+Backend: Firebase Realtime Database
+
+API: OpenWeather API
+
+Platform: Android / Windows Desktop
+
+📷 Screenshots
+(Add screenshots of your app here)
+
+🔧 Configuration
+Replace the Firebase config with your own in firebase_options.dart.
+
+Add your OpenWeather API key to access weather data.
+
+🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss.
+
+📜 License
+This project is licensed under the MIT License.
+
