@@ -2,7 +2,7 @@
 A system designed to monitor weather and flood conditions in real-time, providing alerts and data visualization for disaster preparedness.
 
 📌 Features
-🌦 Weather Tracking – Displays live weather data using OpenWeather API.
+🌦 Weather Tracking – Displays live weather data using Weather API.
 
 🚨 Flood Alerts – Sends notifications when flood risk is detected.
 
