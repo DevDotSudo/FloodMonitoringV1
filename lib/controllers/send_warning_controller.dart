@@ -36,10 +36,10 @@ class SendWarningController with ChangeNotifier {
     }
   }
 
-  void appNotification(String message) async {
+  void appNotification() async {
     await AppNotificationService().sendToAllUsers(
       title: 'Flood Warning Alert',
-      body: message,
+      body: 'Message from MDRRMO Banate. Click to view',
       data: {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'screen': 'updates',

@@ -142,7 +142,7 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.primaryBackground,
                           borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(24),
+                            left: Radius.circular(10),
                           ),
                         ),
                         child: Column(
@@ -200,7 +200,7 @@ class _RegisterAdminScreenState extends State<RegisterAdminScreen> {
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(24),
+                            right: Radius.circular(10),
                           ),
                         ),
                         child: Form(

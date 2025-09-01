@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "257292082474",
+    "firebase_url": "https://capstone-flood-monitoring-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "capstone-flood-monitoring",
     "storage_bucket": "capstone-flood-monitoring.firebasestorage.app"
   },

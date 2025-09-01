@@ -1,8 +1,22 @@
-import 'package:flood_monitoring/constants/app_colors.dart';
-import 'package:flood_monitoring/views/widgets/button.dart';
-import 'package:flood_monitoring/views/widgets/card.dart';
-import 'package:flood_monitoring/views/widgets/textfield.dart';
 import 'package:flutter/material.dart';
+
+void main() {
+  runApp(FloodMonitoringApp());
+}
+
+class FloodMonitoringApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flood Monitoring',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color(0xFFF5F7FA),
+      ),
+      home: SettingsScreen(),
+    );
+  }
+}
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -12,10 +26,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _systemActive = true;
-  String _selectedLanguage = 'English';
-  bool _emailNotifications = true;
-  bool _smsNotifications = true;
+  bool _soundAlerts = true;
   bool _pushNotifications = false;
   double _alertThreshold = 3.0;
 
@@ -35,181 +46,168 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(32.0),
-      child: Center(
-        child: CustomCard(
-          padding: const EdgeInsets.all(32.0), // Increased padding
-          child: SizedBox(
-            width: 700, // Adjusted max width for better desktop form presentation
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'System Settings',
-                  style: TextStyle(
-                    fontSize: 28, // Slightly larger title
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 32), // Increased spacing
-                // General Settings
-                _buildSettingsSection(
-                  context,
-                  title: 'General Settings',
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('System Active', style: TextStyle(color: AppColors.textDark, fontSize: 16)),
-                        Switch(
-                          value: _systemActive,
-                          onChanged: (bool value) {
-                            setState(() {
-                              _systemActive = value;
-                            });
-                          },
-                          activeColor: AppColors.accentBlue,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
-                      value: _selectedLanguage,
-                      decoration: InputDecoration(
-                        labelText: 'Language',
-                        labelStyle: const TextStyle(color: AppColors.textGrey),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: AppColors.lightGreyBackground,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                      ),
-                      items: ['English', 'Spanish', 'French'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value, style: const TextStyle(color: AppColors.textDark)),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLanguage = newValue!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                // Notification Settings
-                _buildSettingsSection(
-                  context,
-                  title: 'Notification Preferences',
-                  children: [
-                    CheckboxListTile(
-                      title: const Text('Email Notifications', style: TextStyle(color: AppColors.textDark, fontSize: 16)),
-                      value: _emailNotifications,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _emailNotifications = value ?? false;
-                        });
-                      },
-                      activeColor: AppColors.accentBlue,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    CheckboxListTile(
-                      title: const Text('SMS Notifications', style: TextStyle(color: AppColors.textDark, fontSize: 16)),
-                      value: _smsNotifications,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _smsNotifications = value ?? false;
-                        });
-                      },
-                      activeColor: AppColors.accentBlue,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    CheckboxListTile(
-                      title: const Text('Desktop Push Notifications', style: TextStyle(color: AppColors.textDark, fontSize: 16)),
-                      value: _pushNotifications,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _pushNotifications = value ?? false;
-                        });
-                      },
-                      activeColor: AppColors.accentBlue,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Flood Alert Threshold (meters)',
-                      style: TextStyle(color: AppColors.textGrey, fontSize: 16.0),
-                    ),
-                    const SizedBox(height: 8.0),
-                    CustomTextField( // Using CustomTextField
-                      controller: _alertThresholdController,
-                      keyboardType: TextInputType.number,
-                      hintText: 'e.g., 3.0',
-                      fillColor: AppColors.lightGreyBackground,
-                      onChanged: (value) {
-                        _alertThreshold = double.tryParse(value) ?? 0.0;
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                // Account Security
-                _buildSettingsSection(
-                  context,
-                  title: 'Account Security',
-                  children: [
-                    Row(
-                      children: [
-                        Expanded( 
-                          child: CustomButton( 
-                            text: 'Change Password',
-                            onPressed: () {
-                              // Handle change password
-                            },
-                            color: Colors.grey.shade600,
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded( // Wrap CustomButton with Expanded
-                          child: CustomButton( // Using CustomButton
-                            text: 'Delete Account',
-                            onPressed: () {
-                              // Handle delete account
-                            },
-                            color: Colors.red.shade600,
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: CustomButton( // Using CustomButton
-                    text: 'Save Settings',
-                    onPressed: () {
-                      // Handle save settings
-                    },
-                    color: AppColors.accentBlue,
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14), // Larger button
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        elevation: 2,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
+            ),
+            child: SizedBox(
+              width: 600,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Alert Settings',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2C3E50),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  // Alert Settings
+                  _buildSettingsSection(
+                    title: 'Alert Preferences',
+                    children: [
+                      CheckboxListTile(
+                        title: const Text('Sound Alerts', 
+                            style: TextStyle(color: Color(0xFF2C3E50), fontSize: 16)),
+                        value: _soundAlerts,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _soundAlerts = value ?? false;
+                          });
+                        },
+                        activeColor: Colors.blue,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      CheckboxListTile(
+                        title: const Text('Push Notifications', 
+                            style: TextStyle(color: Color(0xFF2C3E50), fontSize: 16)),
+                        value: _pushNotifications,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _pushNotifications = value ?? false;
+                          });
+                        },
+                        activeColor: Colors.blue,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Flood Alert Threshold (meters)',
+                        style: TextStyle(color: Color(0xFF7F8C8D), fontSize: 16.0),
+                      ),
+                      const SizedBox(height: 8.0),
+                      TextField(
+                        controller: _alertThresholdController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'e.g., 3.0',
+                          filled: true,
+                          fillColor: const Color(0xFFF5F7FA),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                        ),
+                        onChanged: (value) {
+                          _alertThreshold = double.tryParse(value) ?? 0.0;
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  // Account Security
+                  _buildSettingsSection(
+                    title: 'Account Security',
+                    children: [
+                      Row(
+                        children: [
+                          Expanded( 
+                            child: ElevatedButton( 
+                              onPressed: () {
+                                // Handle change password
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade600,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Change Password', 
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Handle delete account
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red.shade600,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text('Delete Account', 
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Handle save settings
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Settings saved successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text('Save Settings', 
+                          style: TextStyle(color: Colors.white, fontSize: 16)),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -217,12 +215,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context, {required String title, required List<Widget> children}) {
+  Widget _buildSettingsSection({required String title, required List<Widget> children}) {
     return Container(
-      padding: const EdgeInsets.all(20), // Increased padding
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(12), // More rounded corners
+        color: const Color(0xFFF5F7FA),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
@@ -238,9 +236,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 20, // Slightly larger section title
+              fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: AppColors.textDark,
+              color: Color(0xFF2C3E50),
             ),
           ),
           const SizedBox(height: 16),

@@ -102,9 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             childAspectRatio: crossAxisCount == 3 ? 3 : 4,
                             children: [
                               _buildSubscribersCard(totalSubscribers ?? 0),
-                              _buildWaterLevelCard(
-                                currentLevel.toStringAsFixed(2),
-                              ),
+                              _buildWaterLevelCard(currentLevel.toStringAsFixed(2)),
                               _buildRiverStatusCard(status),
                             ],
                           );
@@ -114,12 +112,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Combined CustomCard for Water Level Monitoring and Weather
                 CustomCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Row for titles: "Water Level Monitoring" and "Today's Weather"
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -139,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 24), // Space between titles
+                          const SizedBox(width: 24),
                           Expanded(
                             flex: 1,
                             child: Column(
@@ -160,16 +156,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                       const SizedBox(
                         height: 16,
-                      ), // Space between titles and content below
-                      // Row for content: WaterLevelGraph and WeatherCard
+                      ), 
                       Row(
                         crossAxisAlignment:
-                            CrossAxisAlignment.start, // Align items at the top
+                            CrossAxisAlignment.start, 
                         children: [
                           Expanded(
                             flex: 4,
                             child: SizedBox(
-                              height: 600, // Fixed height for the graph
+                              height: 600, 
                               child:
                                   snapshot.connectionState ==
                                       ConnectionState.waiting
@@ -185,7 +180,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           const SizedBox(
                             width: 24,
-                          ), // Space between the graph and weather card
+                          ), 
                           Expanded(
                             child: SizedBox(
                               height: 550,
@@ -215,12 +210,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: iconColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
         border: Border(
-          left: BorderSide(color: iconColor, width: 4.5),
-          top: BorderSide(color: iconColor, width: 1),
-          bottom: BorderSide(color: iconColor, width: 1),
+          left: BorderSide(color: iconColor, width: 4),
         ),
         boxShadow: [
           BoxShadow(
@@ -233,8 +225,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Row(
         children: [
           Container(
-            width: 75,
-            height: 75,
+            width: 85,
+            height: 85,
             decoration: BoxDecoration(
               color: iconColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
@@ -245,23 +237,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-                const SizedBox(height: 4),
                 Text(
                   value,
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 36,
                     fontWeight: FontWeight.w700,
                     color: iconColor,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF64748B),
                   ),
                 ),
               ],
@@ -274,13 +265,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Color _getStatusColor(String status) {
     if (status.isEmpty || status.contains('No readings.')) {
-      return const Color(0xFF3B82F6); // Blue
+      return const Color(0xFF3B82F6);
     }
     return status == "Normal"
-        ? const Color(0xFF059669) // Green
+        ? const Color(0xFF059669)
         : status == "Warning"
-        ? const Color(0xFFF59E0B) // Orange
-        : const Color(0xFFDC2626); // Red
+        ? const Color(0xFFF59E0B)
+        : const Color(0xFFDC2626);
   }
 
   Widget _buildSubscribersCard(int subscriberCount) {
@@ -295,7 +286,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildWaterLevelCard(String waterLevel) {
     return _buildMetricCard(
       icon: Icons.water_drop,
-      iconColor: const Color(0xFF059669),
+      iconColor: const Color(0xFF3B82F6),
       label: 'Current Water Level',
       value: waterLevel,
     );

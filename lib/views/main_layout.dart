@@ -40,7 +40,6 @@ class MainLayout extends StatelessWidget {
                             ),
                           ],
                         ),
-                        margin: const EdgeInsets.all(16),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: _buildBody(navigationController.currentScreen),
@@ -97,7 +96,7 @@ class MainLayout extends StatelessWidget {
       case ScreenType.sendWarningAlert:
         return const SendWarningAlertScreen();
       case ScreenType.notifications:
-        return const NotificationsScreen();
+        return const NotificationScreen();
       case ScreenType.settings:
         return const SettingsScreen();
     }

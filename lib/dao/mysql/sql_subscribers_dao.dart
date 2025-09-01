@@ -1,4 +1,4 @@
-import 'package:flood_monitoring/dao/mysql/mysql_connection.dart';
+import 'package:flood_monitoring/dao/mysql_connection.dart';
 import 'package:flood_monitoring/models/subscriber.dart';
 
 class SqlSubscribersDAO {

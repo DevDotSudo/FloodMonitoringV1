@@ -6,7 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
   bitsdojo_window_linux
   desktop_window
-  flutter_secure_storage
+  flutter_libserialport
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

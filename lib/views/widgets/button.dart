@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flood_monitoring/constants/app_colors.dart'; // Import your AppColors
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -23,13 +24,13 @@ class CustomButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.width,
-    this.height = 48.0,
-    this.color = Colors.blue,
-    this.textColor = Colors.white,
+    this.height = 48.0, // Default height for consistent buttons
+    this.color = AppColors.primary, // Default to your primary color
+    this.textColor = Colors.white, // Default to white text
     this.borderColor,
-    this.borderRadius = 12.0,
-    this.padding = const EdgeInsets.symmetric(horizontal: 24.0),
-    this.elevation = 0,
+    this.borderRadius = 12.0, // Consistent rounded corners
+    this.padding = const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0), // More vertical padding
+    this.elevation = 2.0, // Default subtle elevation
     this.isOutlined = false,
     this.textStyle,
     this.icon,
@@ -40,35 +41,33 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = onPressed == null || isLoading;
+
     final buttonStyle = isOutlined
         ? OutlinedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            foregroundColor: color,
-            side: BorderSide(color: borderColor ?? color, width: 1.5),
+            backgroundColor: color,
+            foregroundColor: textColor, // Text color for outlined button
+            side: BorderSide(color: borderColor ?? color, width: 1.5), // Use color as default border
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             padding: padding,
             elevation: elevation,
             minimumSize: Size(width ?? double.infinity, height!),
-            textStyle:
-                textStyle ??
+            textStyle: textStyle ??
                 const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           )
         : ElevatedButton.styleFrom(
-            backgroundColor: onPressed == null || isLoading
-                ? color.withOpacity(0.5)
-                : color,
-            foregroundColor: textColor,
+            backgroundColor: isDisabled ? color.withOpacity(0.6) : color, // Dimmed when disabled
+            foregroundColor: isDisabled ? textColor.withOpacity(0.8) : textColor, // Text dimming for disabled
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius),
             ),
             padding: padding,
             elevation: elevation,
-            shadowColor: color.withOpacity(0.3),
+            shadowColor: color.withOpacity(0.3), // Consistent shadow color
             minimumSize: Size(width ?? double.infinity, height!),
-            textStyle:
-                textStyle ??
+            textStyle: textStyle ??
                 const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           );
 
@@ -79,7 +78,7 @@ class CustomButton extends StatelessWidget {
           height: 24,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(textColor),
+            valueColor: AlwaysStoppedAnimation<Color>(textColor), // Loading indicator matches text color
           ),
         );
       }
@@ -89,7 +88,7 @@ class CustomButton extends StatelessWidget {
       }
 
       return Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min, // Wrap content tightly
         mainAxisAlignment: iconAlignment,
         children: [
           icon!,
@@ -99,26 +98,29 @@ class CustomButton extends StatelessWidget {
       );
     }
 
-    return icon == null || isLoading
-        ? ElevatedButton(
-            onPressed: isLoading ? null : onPressed,
+    // Determine which button type to use based on `isOutlined`
+    final Widget buttonWidget = isOutlined
+        ? OutlinedButton(
+            onPressed: isDisabled ? null : onPressed,
             style: buttonStyle,
             child: buildContent(),
           )
-        : SizedBox(
-            width: width ?? double.infinity,
-            height: height,
-            child: isOutlined
-                ? OutlinedButton(
-                    onPressed: isLoading ? null : onPressed,
-                    style: buttonStyle,
-                    child: buildContent(),
-                  )
-                : ElevatedButton(
-                    onPressed: isLoading ? null : onPressed,
-                    style: buttonStyle,
-                    child: buildContent(),
-                  ),
+        : ElevatedButton(
+            onPressed: isDisabled ? null : onPressed,
+            style: buttonStyle,
+            child: buildContent(),
           );
+
+    // If a specific width is provided and not infinity, wrap in SizedBox
+    // Otherwise, the button's minimumSize handles the width
+    if (width != null && width != double.infinity) {
+      return SizedBox(
+        width: width,
+        height: height,
+        child: buttonWidget,
+      );
+    }
+
+    return buttonWidget;
   }
 }

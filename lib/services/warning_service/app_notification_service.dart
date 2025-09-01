@@ -9,18 +9,21 @@ class AppNotificationService {
 
   static final String _fcmEndpoint =
       'https://fcm.googleapis.com/v1/projects/capstone-flood-monitoring/messages:send';
-  static const String _serviceAccountPath =
-      'assets/google-services.json';
+  static const String _serviceAccountPath = 'assets/google-services.json';
 
   Future<AccessCredentials> _getAccessToken() async {
-    final jsonKey = jsonDecode(
-        await File(_serviceAccountPath).readAsString()) as Map<String, dynamic>;
+    final jsonKey =
+        jsonDecode(await File(_serviceAccountPath).readAsString())
+            as Map<String, dynamic>;
 
     final accountCredentials = ServiceAccountCredentials.fromJson(jsonKey);
     final scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
     return await obtainAccessCredentialsViaServiceAccount(
-        accountCredentials, scopes, http.Client());
+      accountCredentials,
+      scopes,
+      http.Client(),
+    );
   }
 
   Future<void> sendToAllUsers({
@@ -45,17 +48,19 @@ class AppNotificationService {
   }
 
   Future<List<String>> _getAllActiveTokens() async {
-
     final snapshot = await _firestore
         .collection('SUBSCRIBERS')
-        .where('fcmToken')
+        .where('fcmToken', isNotEqualTo: null)
         .get();
 
-    return snapshot.docs
+    final tokens = snapshot.docs
         .map((doc) => doc.data()['fcmToken'] as String?)
         .where((token) => token != null)
         .cast<String>()
+        .toSet()
         .toList();
+
+    return tokens;
   }
 
   Future<void> _sendNotification({
@@ -76,45 +81,19 @@ class AppNotificationService {
         body: jsonEncode({
           'message': {
             'token': token,
-            'notification': {
-              'title': title,
-              'body': body,
-            },
+            'notification': {'title': title, 'body': body},
             'data': data ?? {},
-          }
+          },
         }),
       );
 
       if (response.statusCode == 200) {
         print('Sent: ${response.body}');
-      }
-      else {
+      } else {
         print('Failed to send to $token: ${response.body}');
       }
     } catch (e) {
       print('Error sending to $token: $e');
     }
-  }
-
-  Future<void> sendToUser({
-    required String userId,
-    required String title,
-    required String body,
-    Map<String, dynamic>? data,
-  }) async {
-    final doc = await _firestore.collection('fcm_tokens').doc(userId).get();
-    final token = doc.data()?['token'] as String?;
-
-    if (token == null) {
-      print('No token found for user $userId');
-      return;
-    }
-
-    await _sendNotification(
-      token: token,
-      title: title,
-      body: body,
-      data: data,
-    );
   }
 }

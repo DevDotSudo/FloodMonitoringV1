@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flood_monitoring/constants/app_colors.dart'; // Import your AppColors
 
 class CustomTextFormField extends StatelessWidget {
   final String hintText;
@@ -21,7 +22,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? fillColor;
   final EdgeInsetsGeometry? contentPadding;
   final double borderRadius;
-  final InputBorder? border;
+  final InputBorder? border; // This property can override all default borders
   final bool enabled;
   final String? initialValue;
 
@@ -46,7 +47,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintStyle,
     this.fillColor,
     this.contentPadding,
-    this.borderRadius = 12,
+    this.borderRadius = 12, // Default rounded corners
     this.border,
     this.enabled = true,
     this.initialValue,
@@ -71,20 +72,21 @@ class CustomTextFormField extends StatelessWidget {
       focusNode: focusNode,
       textInputAction: textInputAction,
       enabled: enabled,
-      style: style ?? const TextStyle(fontSize: 15),
+      style: style ?? const TextStyle(fontSize: 15, color: AppColors.textDark), // Default text color
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: hintStyle ?? TextStyle(color: Colors.grey.shade500),
+        hintStyle: hintStyle ?? const TextStyle(color: AppColors.textGrey), // Default hint text color
         filled: true,
-        fillColor: fillColor ?? Colors.white,
+        fillColor: fillColor ?? AppColors.lightGreyBackground, // Default fill color
         contentPadding:
             contentPadding ??
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        // Using the custom border builders for consistency
         border: border ?? _buildDefaultBorder(),
         enabledBorder: border ?? _buildDefaultBorder(),
-        focusedBorder: border ?? _buildFocusedBorder(context),
+        focusedBorder: border ?? _buildFocusedBorder(), // No need for context here if AppColors is used
         errorBorder: _buildErrorBorder(),
         focusedErrorBorder: _buildErrorBorder(),
         disabledBorder: border ?? _buildDefaultBorder(),
@@ -95,21 +97,21 @@ class CustomTextFormField extends StatelessWidget {
   InputBorder _buildDefaultBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+      borderSide: const BorderSide(color: AppColors.lightBorder, width: 1), // Using AppColors.lightBorder
     );
   }
 
-  InputBorder _buildFocusedBorder(BuildContext context) {
+  InputBorder _buildFocusedBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+      borderSide: const BorderSide(color: AppColors.accentBlue, width: 1.5), // Using AppColors.accentBlue
     );
   }
 
   InputBorder _buildErrorBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(borderRadius),
-      borderSide: const BorderSide(color: Colors.red, width: 1.5),
+      borderSide: const BorderSide(color: AppColors.errorRed, width: 1.5), // Using AppColors.errorRed
     );
   }
 }

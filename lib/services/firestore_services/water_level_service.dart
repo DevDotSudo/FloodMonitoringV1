@@ -4,27 +4,28 @@ import 'package:flood_monitoring/services/alert_service/audio_alert_service.dart
 import 'package:flood_monitoring/services/alert_service/notification_alert_service.dart';
 
 class WaterLevelService {
-  final _waterLevelsRef = FirebaseFirestore.instance.collection('WATER LEVEL');
+  final _waterLevelsRef = FirebaseFirestore.instance.collection('WATER_LEVEL');
   final _audioService = AudioPlayerService();
   final _notificationService = NotificationAlertService();
   String? _lastStatus;
 
   Stream<List<WaterLevelDataPoint>> watchWaterLevels() {
-    return _waterLevelsRef.orderBy('time', descending: false).snapshots().map((
-      snapshot,
-    ) {
-      return snapshot.docs.map((doc) {
-        return WaterLevelDataPoint(
-          time: doc['time'],
-          level: doc['level'],
-          status: doc['status'],
-        );
-      }).toList();
-    });
+    return _waterLevelsRef
+        .orderBy('timestamp', descending: false)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            return WaterLevelDataPoint(
+              time: doc['timestamp'],
+              level: doc['level'],
+              status: doc['status'],
+            );
+          }).toList();
+        });
   }
 
   void startListening() {
-    watchWaterLevels().listen((data) {
+    watchWaterLevels().listen((data) {  
       if (data.isEmpty) return;
       final status = data.last.status;
 

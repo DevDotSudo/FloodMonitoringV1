@@ -11,6 +11,7 @@
 #include <cloud_firestore/cloud_firestore_plugin_c_api.h>
 #include <desktop_window/desktop_window_plugin.h>
 #include <firebase_core/firebase_core_plugin_c_api.h>
+#include <flutter_libserialport/flutter_libserialport_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   AudioplayersWindowsPluginRegisterWithRegistrar(
@@ -23,4 +24,6 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("DesktopWindowPlugin"));
   FirebaseCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
+  FlutterLibserialportPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FlutterLibserialportPlugin"));
 }

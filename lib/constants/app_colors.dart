@@ -18,4 +18,9 @@ class AppColors {
   static const Color normalStatus = Colors.green;
   static const Color warningStatus = Colors.orange;
   static const Color criticalStatus = Colors.red;
+  static const Color primary = Color(0xFF4361EE);  
+  static const Color background = Color(0xFFF8F9FA);  
+  static const Color success = Color(0xFF4CC9F0);  
+  static const Color error = Color(0xFFF72585); 
+  static const Color info = Color(0xFF4895EF);
 }

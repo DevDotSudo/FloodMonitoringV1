@@ -170,25 +170,25 @@ class _SubscribersScreenState extends State<SubscribersScreen> {
                 (states) => Colors.grey.shade100,
               ),
               columns: const [
-                DataColumn(label: Text('Name', style: TextStyle(fontSize: 18))),
-                DataColumn(label: Text('Age', style: TextStyle(fontSize: 18))),
+                DataColumn(label: Text('Name', style: TextStyle(fontSize: 20))),
+                DataColumn(label: Text('Age', style: TextStyle(fontSize: 20))),
                 DataColumn(
-                  label: Text('Gender', style: TextStyle(fontSize: 18)),
+                  label: Text('Gender', style: TextStyle(fontSize: 20)),
                 ),
                 DataColumn(
-                  label: Text('Address', style: TextStyle(fontSize: 18)),
+                  label: Text('Address', style: TextStyle(fontSize: 20)),
                 ),
                 DataColumn(
-                  label: Text('Phone', style: TextStyle(fontSize: 18)),
+                  label: Text('Phone', style: TextStyle(fontSize: 20)),
                 ),
                 DataColumn(
                   label: Text(
                     'Registered Date',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 20),
                   ),
                 ),
                 DataColumn(
-                  label: Text('Actions', style: TextStyle(fontSize: 18)),
+                  label: Text('Actions', style: TextStyle(fontSize: 20)),
                 ),
               ],
               rows: controller.display.map((subscriber) {
@@ -251,30 +251,15 @@ class _SubscribersScreenState extends State<SubscribersScreen> {
                     DataCell(
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                // Edit logic
-                              },
-                              child: const Text(
-                                "Edit",
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => _deleteSubscriber(
-                                controller,
-                                subscriber,
-                                subscriber.id,
-                              ),
-                              child: const Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
+                        child: TextButton(
+                          onPressed: () => _deleteSubscriber(
+                            controller,
+                            subscriber,
+                          ),
+                          child: const Text(
+                            "Delete",
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ),
                     ),
@@ -291,7 +276,6 @@ class _SubscribersScreenState extends State<SubscribersScreen> {
   Future<void> _deleteSubscriber(
     SubscriberController subscriberController,
     Subscriber subscriber,
-    String id,
   ) async {
     final result = await CustomConfirmationDialog.show(
       context: context,

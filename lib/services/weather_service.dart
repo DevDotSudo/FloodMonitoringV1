@@ -130,7 +130,7 @@ class WeatherApiService {
         return WeatherData.fromJson(data);
       } else {
         throw Exception(
-            'Failed to load weather data: ${response.statusCode} - ${response.body}');
+            "Can't load weather data");
       }
     } catch (e) {
       throw Exception('Failed to connect to weather API: $e');

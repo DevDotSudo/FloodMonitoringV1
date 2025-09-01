@@ -164,7 +164,7 @@ class _DesktopLoginScreenState extends State<DesktopLoginScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.primaryBackground,
                           borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(24),
+                            left: Radius.circular(10),
                           ),
                         ),
                         child: Column(
@@ -213,7 +213,7 @@ class _DesktopLoginScreenState extends State<DesktopLoginScreen> {
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(24),
+                            right: Radius.circular(10),
                           ),
                         ),
                         child: Form(

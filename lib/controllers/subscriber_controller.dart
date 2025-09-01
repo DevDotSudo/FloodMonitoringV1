@@ -7,7 +7,7 @@ class SubscriberController with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final SqlSubscriberService _subscriberService = SqlSubscriberService();
   List<Subscriber> display = [];
-  String _searchQuery = '';
+  String _searchQuery = ' ';
 
   Future<void> loadSubscribers() async {
     final subscribers = await _subscriberService.getAllSubscribers();
@@ -17,6 +17,7 @@ class SubscriberController with ChangeNotifier {
 
   Future<List<Subscriber>> filteredSubscribers() async {
     List<Subscriber> subscribers = await _subscriberService.getAllSubscribers();
+    notifyListeners();
     if (_searchQuery.isEmpty) {
       return subscribers;
     } else {

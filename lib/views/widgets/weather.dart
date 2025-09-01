@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flood_monitoring/services/weather_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,12 +16,16 @@ class _WeatherCardState extends State<WeatherCard> {
   bool _isLoading = true;
   String? _errorMessage;
   DateTime _currentTime = DateTime.now();
+  Timer? _timer; 
 
   @override
   void initState() {
     super.initState();
     _fetchWeather();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+
+    
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
       setState(() {
         _currentTime = DateTime.now();
       });
@@ -31,10 +34,12 @@ class _WeatherCardState extends State<WeatherCard> {
 
   @override
   void dispose() {
+    _timer?.cancel(); 
     super.dispose();
   }
 
   Future<void> _fetchWeather() async {
+    if (!mounted) return;
     setState(() => _isLoading = true);
 
     try {
@@ -42,10 +47,13 @@ class _WeatherCardState extends State<WeatherCard> {
         latitude: 11.000592,
         longitude: 122.8155554,
       );
+      if (!mounted) return;
       setState(() => _weatherData = data);
     } catch (e) {
+      if (!mounted) return;
       setState(() => _errorMessage = 'Failed to load weather: ${e.toString()}');
     } finally {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
@@ -56,8 +64,8 @@ class _WeatherCardState extends State<WeatherCard> {
       child: _isLoading
           ? _buildLoadingState()
           : _errorMessage != null
-          ? _buildErrorState()
-          : _buildWeatherContent(),
+              ? _buildErrorState()
+              : _buildWeatherContent(),
     );
   }
 
@@ -69,17 +77,9 @@ class _WeatherCardState extends State<WeatherCard> {
         border: Border.all(
           color: _errorMessage != null
               ? Colors.red.shade400
-              : Colors.green.shade400,
-          width: 1.5,
+              : const Color.fromARGB(255, 209, 209, 209),
+          width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
       ),
       padding: const EdgeInsets.all(20.0),
       child: child,

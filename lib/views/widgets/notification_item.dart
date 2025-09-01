@@ -1,10 +1,11 @@
-import 'package:flood_monitoring/constants/app_colors.dart';
-import 'package:flood_monitoring/models/notification.dart';
+import 'dart:async';
+
+import 'package:flood_monitoring/models/notification_history.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class NotificationItem extends StatelessWidget {
-  final AppNotification notification;
+class NotificationItem extends StatefulWidget {
+  final NotificationHistory notification;
   final VoidCallback? onDismiss;
 
   const NotificationItem({
@@ -14,126 +15,181 @@ class NotificationItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final (icon, iconColor, statusBgColor, statusTextColor) = _getStatusData();
+  State<NotificationItem> createState() => _NotificationItemState();
+}
 
+class _NotificationItemState extends State<NotificationItem> {
+  late String _relativeTime;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _relativeTime = _getRelativeTime();
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      setState(() {
+        _relativeTime = _getRelativeTime();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final (statusColor, statusOpacity) = _getStatusColors();
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: iconColor, size: 24),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    notification.message,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textDark,
-                    ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.only(top: 6),
+                  decoration: BoxDecoration(
+                    color: statusColor,
+                    shape: BoxShape.circle,
                   ),
-                  if (notification.details != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      notification.details!,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textGrey.withOpacity(0.8),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.notification.message,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF111827),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            _relativeTime,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade500,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 4),
+                      if (widget.notification.details != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.notification.details!,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: statusColor.withOpacity(statusOpacity),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            widget.notification.status.toLowerCase(),
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: statusColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (widget.onDismiss != null) ...[
+                  const SizedBox(width: 8),
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: Colors.grey.shade400,
                     ),
-                  ],
-                  const SizedBox(height: 8),
-                  _buildStatusRow(statusBgColor, statusTextColor),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: widget.onDismiss,
+                  ),
                 ],
-              ),
+              ],
             ),
-            if (onDismiss != null)
-              IconButton(
-                icon: Icon(Icons.close, size: 20, color: Colors.grey.shade500),
-                onPressed: onDismiss,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
-          ],
+          ),
         ),
       ),
     );
   }
-
-  (IconData, Color, Color, Color) _getStatusData() {
-    switch (notification.status) {
-      case 'Delivered':
-        return (
-          Icons.check_circle_rounded,
-          Colors.green.shade500,
-          AppColors.statusNormalBg,
-          AppColors.statusNormalText,
-        );
-      case 'Failed':
-        return (
-          Icons.error_outline_rounded,
-          Colors.red.shade500,
-          AppColors.statusAlertBg,
-          AppColors.statusAlertText,
-        );
-      case 'Info':
+  (Color, double) _getStatusColors() {
+    switch (widget.notification.status.toLowerCase()) {
+      case 'delivered':
+        return (const Color(0xFF10B981), 0.12);
+      case 'failed':
+        return (const Color(0xFFEF4444), 0.12);
+      case 'info':
       default:
-        return (
-          Icons.info_outline_rounded,
-          Colors.blue.shade500,
-          AppColors.statusInfoBg,
-          AppColors.statusInfoText,
-        );
+        return (const Color(0xFF3B82F6), 0.12);
     }
   }
 
-  Widget _buildStatusRow(Color bgColor, Color textColor) {
-    return Row(
-      children: [
-        Text(
-          'Status:',
-          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-        ),
-        const SizedBox(width: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            notification.status,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: textColor,
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          DateFormat('MMM d, y · h:mm a').format(notification.timestamp),
-          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
-        ),
-      ],
-    );
+  String _getRelativeTime() {
+    final now = DateTime.now();
+    final difference = now.difference(widget.notification.timestamp);
+    
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return DateFormat('MMM d, y').format(widget.notification.timestamp);
+    }
   }
 }
